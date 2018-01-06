@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout title="Home">
+  <section>
+    <h1>Welcome</h1>
+    <p>This is my personal corner of the internet where I write about things I find interesting.</p>
+  </section>
+
+  <section class="recent-posts">
+    <h2>Recent Posts</h2>
+    {posts.length > 0 ? (
+      <ul>
+        {posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}`}>
+              <h3>{post.data.title}</h3>
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              <p>{post.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p>No posts yet. Check back soon!</p>
+    )}
+    {posts.length > 0 && <a href="/blog">View all posts &rarr;</a>}
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    margin-bottom: 3rem;
+  }
+
+  .recent-posts ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .recent-posts a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .recent-posts a:hover {
+    border-color: var(--color-accent);
+  }
+
+  .recent-posts h3 {
+    margin-bottom: 0.25rem;
+  }
+
+  time {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  .recent-posts p {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    color: var(--color-muted);
+  }
+</style>
