@@ -1,21 +1,26 @@
 {
-  "name": "personal-site",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/alpinejs": "^0.5.0",
-    "@types/alpinejs": "^3.13.11",
-    "alpinejs": "^3.15.8",
-    "astro": "^6.0.6",
-    "htmx.org": "^2.0.8"
-  }
+	"name": "personal-site",
+	"type": "module",
+	"version": "0.0.1",
+	"engines": {
+		"node": ">=22.12.0"
+	},
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"check": "biome check .",
+		"check:fix": "biome check --fix ."
+	},
+	"dependencies": {
+		"@astrojs/alpinejs": "^0.5.0",
+		"@types/alpinejs": "^3.13.11",
+		"alpinejs": "^3.15.8",
+		"astro": "^6.0.6",
+		"htmx.org": "^2.0.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8"
+	}
 }

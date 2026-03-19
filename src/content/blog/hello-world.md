@@ -1,7 +1,7 @@
 ---
 title: 'Hello World'
 description: 'My first blog post on my new site.'
-pubDate: 2026-03-18
+pubDate: 2026-01-06
 tags: ['general']
 ---
 

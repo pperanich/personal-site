@@ -2,8 +2,86 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About" description="Learn more about me">
+<BaseLayout title="About" description="About Preston Peranich — research engineer, open-source contributor, and endurance athlete">
   <h1>About Me</h1>
-  <p>Hello! Welcome to my site. This is a good place to tell visitors about yourself.</p>
-  <p>Edit this page at <code>src/pages/about.astro</code> to make it your own.</p>
+
+  <section>
+    <p>
+      I'm Preston, a research engineer at
+      <a href="https://www.jhuapl.edu">Johns Hopkins Applied Physics Laboratory</a>
+      where I build real-time sensing and control systems. My work spans the full
+      stack — embedded firmware and edge deployments, GPU-accelerated processing,
+      and the researcher-facing tools that tie it all together.
+    </p>
+    <p>
+      Most of my time is spent in the Neural Interfaces group, where I work on
+      noninvasive and intracortical brain-computer interfaces, closed-loop organoid
+      experiments, and optical instrumentation like digital holography and OCT. I've
+      also built real-time monitoring systems for laser powder bed fusion additive manufacturing and
+      provisioned edge compute platforms for field-deployed sensing pipelines.
+    </p>
+    <p>
+      More recently, I've been building a web platform for integrated photonics —
+      tracking devices from tapeout through wafer fabrication, collecting characterization
+      data, and running automated processing pipelines that feed into an interactive
+      dashboard.
+    </p>
+    <p>
+      Across these projects I've picked up experience with embedded systems and firmware
+      (Rust, C/C++), GPU-accelerated computing, scientific Python, edge deployments
+      (NVIDIA Jetson), computer vision, web applications, and reproducible infrastructure
+      with Nix, Docker, and CI/CD.
+    </p>
+  </section>
+
+  <section>
+    <h2>Open Source</h2>
+    <p>
+      I'm a core contributor to <a href="https://github.com/ezmsg-org/ezmsg">ezmsg</a>,
+      a pure-Python DAG framework for real-time pipelines backed by shared memory. It's
+      been adopted by multiple research groups for neuro and optics work.
+    </p>
+    <p>
+      I'm also the sole firmware developer for
+      <a href="https://github.com/dcmini-org/dcmini-fw">DC Mini</a>, an open-hardware
+      16-channel EEG wearable. The firmware is written in Rust with a three-crate
+      architecture (BSP, boot manager, application) and a Nix-based reproducible toolchain.
+    </p>
+  </section>
+
+  <section>
+    <h2>Background</h2>
+    <p>
+      Before joining APL full-time, I interned there in the Space Sector doing spacecraft
+      avionics testing on embedded Xilinx SoCs. I also spent time at Gulfstream Aerospace
+      working avionics on the G500/G600 program and at FreeWave Technologies doing system
+      testing for radio products.
+    </p>
+    <p>
+      I hold an M.S. and B.S. in Electrical Engineering from Mississippi State University,
+      where my graduate research focused on UAS-based P-band receivers for soil moisture
+      sensing and wearable sensor systems for motion capture. I was a two-time NASA Fellow
+      through the Mississippi Space Grant Consortium.
+    </p>
+  </section>
+
+  <section>
+    <h2>Outside of Work</h2>
+    <p>
+      When I'm not writing code or soldering, you'll find me on a golf course or tennis
+      court. I also had a brief foray into endurance sports — I completed the
+      <a href="https://www.ironman.com/im-lake-placid">Lake Placid Ironman</a> in July 2024,
+      my first and (so far) only triathlon.
+    </p>
+  </section>
 </BaseLayout>
+
+<style>
+  section {
+    margin-bottom: 2.5rem;
+  }
+
+  section:last-child {
+    margin-bottom: 0;
+  }
+</style>
