@@ -5,7 +5,7 @@ pubDate: 2026-03-07
 tags: ['nix', 'networking', 'infrastructure']
 ---
 
-One of the nine machines in [my dotfiles flake](/blog/dotfiles-part-1-dendritic-flakes) is a home router running NixOS. Rather than hand-writing nftables rules and systemd-networkd configs, I built a module system that lets me declare what I want — subnets, VLANs, isolation levels, port forwards — and derives all the low-level configuration at build time.
+One of the nine machines in [my dotfiles flake](/posts/dotfiles-part-1-dendritic-flakes) is a home router running NixOS. Rather than hand-writing nftables rules and systemd-networkd configs, I built a module system that lets me declare what I want — subnets, VLANs, isolation levels, port forwards — and derives all the low-level configuration at build time.
 
 This post walks through how it works, using the actual `pp-router1` machine config as a concrete example.
 
@@ -35,7 +35,7 @@ flake.modules.nixos.router = { modules, ... }: {
 };
 ```
 
-Each sub-module is independently defined via import-tree (as described in [Part 1](/blog/dotfiles-part-1-dendritic-flakes)), and the aggregated `router` module pulls them together. A machine opts in by importing `router` from its module list. This is the same dendritic pattern used everywhere else — the router just happens to be a larger composition.
+Each sub-module is independently defined via import-tree (as described in [Part 1](/posts/dotfiles-part-1-dendritic-flakes)), and the aggregated `router` module pulls them together. A machine opts in by importing `router` from its module list. This is the same dendritic pattern used everywhere else — the router just happens to be a larger composition.
 
 ## The Option Tree
 
@@ -240,4 +240,4 @@ One line for the router framework, one line per service. The rest of the 628-lin
 
 Every nftables rule, every DHCP pool, every VLAN bridge — generated from a handful of high-level options. And if I misconfigure something, the build fails with a message telling me exactly what's wrong.
 
-In the [next post](/blog/dotfiles-part-3-secrets-fleet), I'll cover the secrets architecture, service exposure (Caddy + Cloudflare Tunnel), and fleet management that makes deploying all of this to multiple machines practical.
+In the [next post](/posts/dotfiles-part-3-secrets-fleet), I'll cover the secrets architecture, service exposure (Caddy + Cloudflare Tunnel), and fleet management that makes deploying all of this to multiple machines practical.

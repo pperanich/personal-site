@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: post,
+  }));
+}
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article>
+    <header>
+      <a href="/posts" class="back-link">&larr; Posts</a>
+      <h1>{post.data.title}</h1>
+      <div class="meta">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </div>
+      {post.data.tags.length > 0 && (
+        <div class="tags">
+          {post.data.tags.map((tag) => (
+            <a href={`/tags/${tag}`} class="tag">{tag}</a>
+          ))}
+        </div>
+      )}
+    </header>
+    <div class="content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .back-link {
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: rgb(var(--color-muted));
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link:hover {
+    color: rgb(var(--color-accent));
+  }
+
+  header {
+    margin-bottom: 2.5rem;
+  }
+
+  header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .meta {
+    font-size: 0.85rem;
+    color: rgb(var(--color-muted));
+  }
+
+  .content {
+    overflow-wrap: break-word;
+  }
+
+  .content :global(h2) {
+    margin-top: 2.5rem;
+    scroll-margin-top: 5rem;
+  }
+
+  .content :global(h3) {
+    margin-top: 1.75rem;
+    scroll-margin-top: 5rem;
+  }
+
+  .content :global(ul),
+  .content :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .content :global(li) {
+    margin-bottom: 0.25rem;
+  }
+
+  .content :global(img) {
+    max-width: 100%;
+    border-radius: 0.5rem;
+  }
+
+  .content :global(blockquote) {
+    border-left: 3px solid rgb(var(--color-accent));
+    padding-left: 1rem;
+    margin: 1.25rem 0;
+    color: rgb(var(--color-muted));
+  }
+
+  .content :global(a) {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 0.2rem;
+  }
+
+  .content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .content :global(th),
+  .content :global(td) {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(var(--color-border), 0.6);
+    text-align: left;
+  }
+
+  .content :global(th) {
+    background: rgba(var(--color-card), 0.5);
+    font-weight: 600;
+  }
+</style>

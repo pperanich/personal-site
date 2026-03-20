@@ -5,7 +5,7 @@ pubDate: 2026-02-03
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'async', 'embassy']
 ---
 
-In [Part 3](/blog/dc-mini-part-3-bus-manager) we built a bus manager for shared peripherals. Now we need to coordinate the tasks that use them. DC Mini has a lot going on simultaneously: streaming EEG from dual ADS1299s, polling an IMU, managing BLE connections, handling button presses, recording to an SD card, and driving a status LED. Each of these is an independent async task, but they need to interact — a double button press should trigger a manual event marker in the EEG recording, a long hold should power down the device, and a BLE config write should reconfigure the analog frontend.
+In [Part 3](/posts/dc-mini-part-3-bus-manager) we built a bus manager for shared peripherals. Now we need to coordinate the tasks that use them. DC Mini has a lot going on simultaneously: streaming EEG from dual ADS1299s, polling an IMU, managing BLE connections, handling button presses, recording to an SD card, and driving a status LED. Each of these is an independent async task, but they need to interact — a double button press should trigger a manual event marker in the EEG recording, a long hold should power down the device, and a BLE config write should reconfigure the analog frontend.
 
 This post covers our event-driven orchestration pattern — a simple but effective approach that keeps tasks decoupled while making the system's behavior trivially auditable.
 
@@ -81,4 +81,4 @@ The biggest constraint is that all event types must be known at compile time. Yo
 
 For DC Mini, these trade-offs are the right ones. The firmware has a fixed, known set of sensors and actuators. The event flow is predictable and auditable. And the cognitive load of working in the codebase is dramatically lower than it would be with direct inter-task coupling — you can understand any subsystem in isolation, and you can understand the full system behavior by reading one match statement.
 
-In [Part 5](/blog/dc-mini-part-5-one-protocol-two-transports), we'll look at how the same RPC protocol definition serves both USB and BLE without duplication.
+In [Part 5](/posts/dc-mini-part-5-one-protocol-two-transports), we'll look at how the same RPC protocol definition serves both USB and BLE without duplication.

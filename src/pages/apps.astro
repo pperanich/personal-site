@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const apps = [
+  {
+    name: 'DC Mini',
+    description: 'Open-hardware 16-channel EEG wearable with Rust firmware. Modular BSP, embassy-rs async, BLE + USB streaming.',
+    url: 'https://github.com/dcmini-org/dcmini-fw',
+    tags: ['Rust', 'Embedded', 'Open Hardware'],
+  },
+  {
+    name: 'ezmsg',
+    description: 'Pure-Python DAG framework for real-time pipelines. Shared-memory transport, reusable processing blocks, used across neuro and optics research.',
+    url: 'https://github.com/ezmsg-org/ezmsg',
+    tags: ['Python', 'Real-Time', 'Research'],
+  },
+];
+---
+
+<BaseLayout title="Apps" description="Projects and open-source work">
+  <h1>Apps & Projects</h1>
+  <p class="subtitle">Open-source projects I build and maintain.</p>
+
+  <div class="app-grid">
+    {apps.map((app) => (
+      <a href={app.url} class="app-card" target="_blank" rel="noopener">
+        <h2>{app.name}</h2>
+        <p>{app.description}</p>
+        <div class="tags">
+          {app.tags.map((tag) => <span class="tag">{tag}</span>)}
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .subtitle {
+    color: rgb(var(--color-muted));
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+  }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .app-card {
+    display: block;
+    padding: 1.25rem;
+    border: 1px solid rgba(var(--color-border), 0.6);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .app-card:hover {
+    border-color: rgb(var(--color-accent));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .app-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .app-card p {
+    font-size: 0.85rem;
+    color: rgb(var(--color-muted));
+    margin-bottom: 0.75rem;
+  }
+</style>

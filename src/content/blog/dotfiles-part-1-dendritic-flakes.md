@@ -201,7 +201,7 @@ Home profiles mirror the same named-import pattern. My personal profile:
 }
 ```
 
-The `desktop` flag is set per-machine in the user bridge module, so headless servers skip fonts and GUI apps without duplicating the profile. The user bridge and how home profiles wire into machines are covered in [Part 3](/blog/dotfiles-part-3-secrets-fleet).
+The `desktop` flag is set per-machine in the user bridge module, so headless servers skip fonts and GUI apps without duplicating the profile. The user bridge and how home profiles wire into machines are covered in [Part 3](/posts/dotfiles-part-3-secrets-fleet).
 
 ## Why This Works
 

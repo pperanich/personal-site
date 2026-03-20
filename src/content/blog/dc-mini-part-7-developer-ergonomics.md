@@ -5,7 +5,7 @@ pubDate: 2026-02-24
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'nix', 'developer-experience']
 ---
 
-In [Part 6](/blog/dc-mini-part-6-executors-dfu-neopixel) we covered the runtime infrastructure — executors, DFU, and the Neopixel driver. This final post steps back from the firmware itself to look at the developer experience: how we build it, how we keep the environment reproducible, and how we manage complexity in a multi-crate workspace.
+In [Part 6](/posts/dc-mini-part-6-executors-dfu-neopixel) we covered the runtime infrastructure — executors, DFU, and the Neopixel driver. This final post steps back from the firmware itself to look at the developer experience: how we build it, how we keep the environment reproducible, and how we manage complexity in a multi-crate workspace.
 
 Embedded Rust projects accumulate friction fast. The toolchain is nightly. The target is a cross-compilation triple most developers haven't seen before. Building requires multiple passes for the bootloader and application. Flashing requires a debug probe and specific tool configuration. Every one of these is a place where a new contributor can get stuck.
 
@@ -57,12 +57,12 @@ This kind of deep feature propagation is tedious to set up initially, but it pay
 
 Over these seven posts, we've walked through DC Mini's firmware architecture:
 
-1. **[Architecture Overview](/blog/dc-mini-part-1-firmware-architecture)** — the three-crate split and async-everywhere design
-2. **[Typed Resource Bundles](/blog/dc-mini-part-2-typed-resource-bundles)** — compile-time pin allocation and feature-gated hardware revisions
-3. **[The Bus Manager](/blog/dc-mini-part-3-bus-manager)** — power-aware peripheral sharing without a heap
-4. **[Event-Driven Orchestration](/blog/dc-mini-part-4-event-driven-orchestration)** — inversion of control with a central event bus
-5. **[One Protocol, Two Transports](/blog/dc-mini-part-5-one-protocol-two-transports)** — shared RPC definitions over USB and BLE
-6. **[Executors, DFU, and Neopixel](/blog/dc-mini-part-6-executors-dfu-neopixel)** — multi-priority scheduling, watchdog-protected updates, and PWM-driven LEDs
+1. **[Architecture Overview](/posts/dc-mini-part-1-firmware-architecture)** — the three-crate split and async-everywhere design
+2. **[Typed Resource Bundles](/posts/dc-mini-part-2-typed-resource-bundles)** — compile-time pin allocation and feature-gated hardware revisions
+3. **[The Bus Manager](/posts/dc-mini-part-3-bus-manager)** — power-aware peripheral sharing without a heap
+4. **[Event-Driven Orchestration](/posts/dc-mini-part-4-event-driven-orchestration)** — inversion of control with a central event bus
+5. **[One Protocol, Two Transports](/posts/dc-mini-part-5-one-protocol-two-transports)** — shared RPC definitions over USB and BLE
+6. **[Executors, DFU, and Neopixel](/posts/dc-mini-part-6-executors-dfu-neopixel)** — multi-priority scheduling, watchdog-protected updates, and PWM-driven LEDs
 7. **Developer Ergonomics** — xtask, Nix, and the prelude
 
 The common thread is using Rust's type system and zero-cost abstractions to solve problems that traditionally require runtime checks, manual coordination, or external tooling. Embedded Rust is still a young ecosystem, but the patterns are maturing quickly. Building real hardware with it — hardware that's used in sleep research, deployed on subjects overnight, and expected to just work — has been a forcing function for finding out which patterns hold up under pressure.

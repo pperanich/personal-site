@@ -5,7 +5,7 @@ pubDate: 2026-01-20
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'embassy']
 ---
 
-In [Part 1](/blog/dc-mini-part-1-firmware-architecture) I gave an overview of DC Mini's three-crate firmware architecture. This post digs into the BSP (board support package) layer — specifically, how we use Rust's type system to make pin misassignment a compile-time error rather than a runtime mystery.
+In [Part 1](/posts/dc-mini-part-1-firmware-architecture) I gave an overview of DC Mini's three-crate firmware architecture. This post digs into the BSP (board support package) layer — specifically, how we use Rust's type system to make pin misassignment a compile-time error rather than a runtime mystery.
 
 ## The Problem: Peripheral Soup
 
@@ -74,4 +74,4 @@ The typed resource bundle pattern prevents three categories of bugs entirely:
 
 These aren't theoretical wins. On a board with 40+ GPIO pins and 8 different peripherals, wiring bugs are the most common class of "it compiles but doesn't work" issues. Moving them to compile time saves hours of oscilloscope debugging.
 
-Next up in [Part 3](/blog/dc-mini-part-3-bus-manager), we'll look at how the bus manager crate builds on this foundation to share I2C and SPI buses across async tasks with automatic lifecycle management.
+Next up in [Part 3](/posts/dc-mini-part-3-bus-manager), we'll look at how the bus manager crate builds on this foundation to share I2C and SPI buses across async tasks with automatic lifecycle management.

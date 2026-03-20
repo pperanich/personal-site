@@ -4,10 +4,21 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Personal site and blog' } = Astro.props;
+const { title, description = 'Preston Peranich — research engineer, open-source contributor' } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { href: '/posts', label: 'Posts' },
+  { href: '/tags', label: 'Tags' },
+  { href: '/apps', label: 'Apps' },
+  { href: '/about', label: 'About' },
+  { href: '/resume.pdf', label: 'Resume' },
+];
+
+import { ClientRouter } from 'astro:transitions';
 ---
 
-<html lang="en">
+<html lang="en" x-data="{ theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), navOpen: false }" x-bind:data-theme="theme" x-bind:class="{ 'theme-ready': true }" x-init="$watch('theme', val => localStorage.setItem('theme', val))">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -15,44 +26,93 @@ const { title, description = 'Personal site and blog' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <script src="htmx.org"></script>
+    <title>{title} | Preston Peranich</title>
+    <ClientRouter />
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
   </head>
   <body>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/blog">Blog</a>
-      <a href="/about">About</a>
-    </nav>
+    <header>
+      <nav>
+        <a href="/" class="site-title">Preston Peranich</a>
+        <button class="nav-toggle" x-on:click="navOpen = !navOpen" aria-label="Toggle navigation">
+          <svg x-show="!navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <svg x-show="navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="nav-links" x-bind:class="{ open: navOpen }">
+          {navItems.map(({ href, label }) => (
+            <a
+              href={href}
+              class:list={[{ active: currentPath.startsWith(href) }]}
+              target={href.endsWith('.pdf') ? '_blank' : undefined}
+              rel={href.endsWith('.pdf') ? 'noopener' : undefined}
+              x-on:click="navOpen = false"
+            >
+              {label}
+            </a>
+          ))}
+          <button
+            class="theme-toggle"
+            x-on:click="theme = theme === 'light' ? 'dark' : 'light'"
+            aria-label="Toggle theme"
+          >
+            <svg x-show="theme === 'light'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg x-show="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+        </div>
+      </nav>
+    </header>
     <main>
       <slot />
     </main>
     <footer>
-      <p>&copy; {new Date().getFullYear()}</p>
+      <div class="footer-content">
+        <p>&copy; {new Date().getFullYear()} Preston Peranich</p>
+        <div class="social-links">
+          <a href="https://github.com/pperanich" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/preston-peranich-74166812a" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://scholar.google.com/citations?user=WDM22cwAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
+          </a>
+          <a href="mailto:pperanich@gmail.com" aria-label="Email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </a>
+        </div>
+      </div>
     </footer>
   </body>
 </html>
 
 <style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
   :root {
-    --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-    --color-bg: #fafafa;
-    --color-text: #1a1a1a;
-    --color-muted: #666;
-    --color-accent: #2563eb;
-    --color-border: #e5e7eb;
+    --font-body: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', monospace;
+    --color-fill: 251, 254, 251;
+    --color-text: 40, 39, 40;
+    --color-accent: 0, 108, 172;
+    --color-muted: 120, 120, 120;
+    --color-card: 240, 240, 240;
+    --color-border: 220, 220, 220;
     --max-width: 48rem;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-bg: #111;
-      --color-text: #e5e7eb;
-      --color-muted: #9ca3af;
-      --color-accent: #60a5fa;
-      --color-border: #333;
-    }
+  [data-theme="dark"] {
+    --color-fill: 17, 17, 21;
+    --color-text: 220, 224, 232;
+    --color-accent: 255, 120, 20;
+    --color-muted: 145, 150, 165;
+    --color-card: 28, 28, 35;
+    --color-border: 45, 48, 58;
   }
 
   * {
@@ -61,83 +121,338 @@ const { title, description = 'Personal site and blog' } = Astro.props;
     padding: 0;
   }
 
+  *:focus-visible {
+    outline: 2px solid rgb(var(--color-accent));
+    outline-offset: 2px;
+  }
+
   html {
     font-family: var(--font-body);
-    background: var(--color-bg);
-    color: var(--color-text);
-    line-height: 1.6;
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+    background: rgb(var(--color-fill));
+    color: rgb(var(--color-text));
+    line-height: 1.7;
+  }
+
+  html.theme-ready {
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 2rem 1.5rem;
+  }
+
+  ::selection {
+    background: rgba(var(--color-accent), 0.25);
+  }
+
+  /* Header & Nav */
+  header {
+    margin-bottom: 3rem;
   }
 
   nav {
     display: flex;
-    gap: 1.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(var(--color-border), 0.6);
   }
 
-  nav a {
-    color: var(--color-text);
+  .site-title {
+    font-weight: 700;
+    font-size: 1.25rem;
     text-decoration: none;
+    color: rgb(var(--color-text));
+    transition: color 0.15s ease;
+  }
+
+  .site-title:hover {
+    color: rgb(var(--color-accent));
+  }
+
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgb(var(--color-text));
+    padding: 0.25rem;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .nav-links a {
+    color: rgb(var(--color-text));
+    text-decoration: none;
+    font-size: 0.9rem;
     font-weight: 500;
+    text-underline-offset: 0.25rem;
+    transition: color 0.15s ease;
   }
 
-  nav a:hover {
-    color: var(--color-accent);
+  .nav-links a:hover {
+    color: rgb(var(--color-accent));
   }
 
+  .nav-links a.active {
+    color: rgb(var(--color-accent));
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-underline-offset: 0.25rem;
+  }
+
+  .theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgb(var(--color-text));
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    color: rgb(var(--color-accent));
+    transform: rotate(15deg);
+  }
+
+  /* Main content */
   main {
-    min-height: 60vh;
+    min-height: 65vh;
+    animation: fade-in 0.3s ease-out;
   }
 
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    main { animation: none; }
+    html.theme-ready { transition: none; }
+  }
+
+  /* Footer */
   footer {
     margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
-    color: var(--color-muted);
-    font-size: 0.875rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(var(--color-border), 0.6);
   }
 
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(var(--color-muted));
+    font-size: 0.8rem;
+  }
+
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .social-links a {
+    color: rgb(var(--color-muted));
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .social-links a:hover {
+    color: rgb(var(--color-accent));
+  }
+
+  /* Typography */
   a {
-    color: var(--color-accent);
+    color: rgb(var(--color-accent));
   }
 
-  h1, h2, h3 {
-    line-height: 1.3;
+  h1, h2, h3, h4 {
+    line-height: 1.35;
     margin-bottom: 0.5rem;
+    font-weight: 600;
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; }
-  h3 { font-size: 1.25rem; }
+  h1 {
+    font-size: 1.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.15rem; }
 
   p {
     margin-bottom: 1rem;
   }
 
+  /* Code */
   code {
-    font-family: var(--font-mono);
-    background: var(--color-border);
-    padding: 0.125rem 0.375rem;
+    font-family: var(--font-body);
+    background: rgba(var(--color-card), 0.8);
+    border: 1px solid rgba(var(--color-border), 0.3);
+    padding: 0.1rem 0.35rem;
     border-radius: 0.25rem;
-    font-size: 0.875em;
+    font-size: 0.9em;
   }
 
   pre {
     padding: 1rem;
     border-radius: 0.5rem;
+    border: 1px solid rgba(var(--color-border), 0.4);
     overflow-x: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
   }
 
   pre code {
     background: none;
+    border: none;
     padding: 0;
+  }
+
+  pre::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  pre::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  pre::-webkit-scrollbar-thumb {
+    background: rgba(var(--color-border), 0.5);
+    border-radius: 3px;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid rgba(var(--color-border), 0.6);
+    margin: 2rem 0;
+  }
+
+  /* Post cards */
+  .post-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 1.25rem 0 1.25rem 0;
+    border-bottom: 1px solid rgba(var(--color-border), 0.4);
+    border-left: 2px solid transparent;
+    transition: border-left-color 0.15s ease, padding-left 0.15s ease;
+  }
+
+  .post-card:last-child {
+    border-bottom: none;
+  }
+
+  .post-card:hover {
+    padding-left: 0.75rem;
+    border-left-color: rgb(var(--color-accent));
+  }
+
+  .post-card:hover .post-title {
+    color: rgb(var(--color-accent));
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 0.25rem;
+    text-decoration-color: rgba(var(--color-accent), 0.4);
+    transition: color 0.15s ease;
+  }
+
+  .post-meta {
+    font-size: 0.8rem;
+    color: rgb(var(--color-muted));
+    margin-bottom: 0.25rem;
+  }
+
+  .post-description {
+    font-size: 0.85rem;
+    color: rgb(var(--color-muted));
+    margin: 0;
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.5rem;
+    background: rgba(var(--color-card), 0.8);
+    border-radius: 1rem;
+    color: rgb(var(--color-muted));
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .tag:hover {
+    color: rgb(var(--color-accent));
+    background: rgba(var(--color-accent), 0.1);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    body {
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+    }
+
+    .nav-toggle {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgb(var(--color-fill));
+      border-bottom: 1px solid rgba(var(--color-border), 0.6);
+      padding: 1rem 1.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      z-index: 100;
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+
+    nav {
+      position: relative;
+    }
+
+    .footer-content {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
   }
 </style>

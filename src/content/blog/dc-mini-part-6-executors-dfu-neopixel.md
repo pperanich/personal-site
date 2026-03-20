@@ -5,7 +5,7 @@ pubDate: 2026-02-17
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'embassy', 'dfu', 'neopixel']
 ---
 
-In [Part 5](/blog/dc-mini-part-5-one-protocol-two-transports) we covered how DC Mini serves the same RPC protocol over USB and BLE. This post covers three pieces of infrastructure that tie the system together: multi-priority task execution, firmware updates with automatic rollback, and a custom Neopixel driver.
+In [Part 5](/posts/dc-mini-part-5-one-protocol-two-transports) we covered how DC Mini serves the same RPC protocol over USB and BLE. This post covers three pieces of infrastructure that tie the system together: multi-priority task execution, firmware updates with automatic rollback, and a custom Neopixel driver.
 
 They're different problems, but they share a design philosophy: use hardware features to avoid software complexity.
 
@@ -71,4 +71,4 @@ The multi-priority executor uses the NVIC to provide preemptive scheduling witho
 
 Each one replaces a software problem — priority inversion, bricked devices, timing jitter — with a hardware mechanism that's simpler and more reliable. Embedded systems have these peripherals available; it's worth learning to use them.
 
-In [Part 7](/blog/dc-mini-part-7-developer-ergonomics), we'll cover the developer experience: xtask for build orchestration, Nix for reproducible environments, and the prelude pattern for managing imports.
+In [Part 7](/posts/dc-mini-part-7-developer-ergonomics), we'll cover the developer experience: xtask for build orchestration, Nix for reproducible environments, and the prelude pattern for managing imports.

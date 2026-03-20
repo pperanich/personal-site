@@ -59,4 +59,4 @@ DC Mini is actively being used in sleep research — our recent [StARS DCM paper
 
 The firmware is open source — take a look at [dcmini-org/dcmini-fw](https://github.com/dcmini-org/dcmini-fw) if you're interested in embedded Rust, async on microcontrollers, or wearable biosensing.
 
-*This is the first in a seven-part series. [Part 2](/blog/dc-mini-part-2-typed-resource-bundles) digs into the BSP's typed resource bundle pattern and how we use Rust's type system to prevent pin misassignment at compile time.*
+*This is the first in a seven-part series. [Part 2](/posts/dc-mini-part-2-typed-resource-bundles) digs into the BSP's typed resource bundle pattern and how we use Rust's type system to prevent pin misassignment at compile time.*

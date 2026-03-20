@@ -5,7 +5,7 @@ pubDate: 2026-03-19
 tags: ['nix', 'tooling', 'infrastructure']
 ---
 
-In Parts [1](/blog/dotfiles-part-1-dendritic-flakes)–[4](/blog/dotfiles-part-4-network-services), the focus was on module architecture and network services. This post covers the tools and patterns that handle operational edges: interacting with external APIs, bridging Nix with non-Nix workflows, running services across Darwin and NixOS, and making the dev shell a complete operational environment.
+In Parts [1](/posts/dotfiles-part-1-dendritic-flakes)–[4](/posts/dotfiles-part-4-network-services), the focus was on module architecture and network services. This post covers the tools and patterns that handle operational edges: interacting with external APIs, bridging Nix with non-Nix workflows, running services across Darwin and NixOS, and making the dev shell a complete operational environment.
 
 ## The `cf` Tunnel State Machine
 
@@ -226,7 +226,7 @@ This is the bridge between the declarative Nix world and day-to-day operations. 
 
 ## Wrapping Up
 
-These five posts have covered the full stack: module architecture ([Part 1](/blog/dotfiles-part-1-dendritic-flakes)), router framework ([Part 2](/blog/dotfiles-part-2-nixos-router)), secrets and fleet management ([Part 3](/blog/dotfiles-part-3-secrets-fleet)), network-aware services ([Part 4](/blog/dotfiles-part-4-network-services)), and the custom tooling that ties it together.
+These five posts have covered the full stack: module architecture ([Part 1](/posts/dotfiles-part-1-dendritic-flakes)), router framework ([Part 2](/posts/dotfiles-part-2-nixos-router)), secrets and fleet management ([Part 3](/posts/dotfiles-part-3-secrets-fleet)), network-aware services ([Part 4](/posts/dotfiles-part-4-network-services)), and the custom tooling that ties it together.
 
 The common thread is that Nix's evaluation model — where everything is data before it becomes configuration — makes these patterns possible. VLANs drive firewall rules and DNS policy. A JSON file of peers becomes WireGuard config and `/etc/hosts` entries. A state machine in Go produces metadata that Nix consumes at build time. Each layer feeds the next.
 

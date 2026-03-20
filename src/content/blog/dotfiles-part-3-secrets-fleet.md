@@ -5,7 +5,7 @@ pubDate: 2026-03-11
 tags: ['nix', 'security', 'infrastructure']
 ---
 
-In [Part 1](/blog/dotfiles-part-1-dendritic-flakes), I covered the module architecture. [Part 2](/blog/dotfiles-part-2-nixos-router) walked through the router. This post is about the operational side: how secrets get where they need to go, how machines get deployed, and how the same user module works across NixOS and macOS without duplication.
+In [Part 1](/posts/dotfiles-part-1-dendritic-flakes), I covered the module architecture. [Part 2](/posts/dotfiles-part-2-nixos-router) walked through the router. This post is about the operational side: how secrets get where they need to go, how machines get deployed, and how the same user module works across NixOS and macOS without duplication.
 
 ## Two Secret Systems, Two Jobs
 
@@ -124,7 +124,7 @@ Some machines build locally, others offload. The NAS, for example, builds on a d
 clan.core.networking.buildHost = "root@pp-wsl1.pp-wg";
 ```
 
-The inventory (from [Part 1](/blog/dotfiles-part-1-dendritic-flakes)) drives service assignment across the fleet. WireGuard peers are wired automatically — `pp-router1` is the controller, and all other machines are peers. Borgbackup runs with the router as server and the NAS as client. SSH keys, authorized keys, and certificate search domains are applied fleet-wide via tags:
+The inventory (from [Part 1](/posts/dotfiles-part-1-dendritic-flakes)) drives service assignment across the fleet. WireGuard peers are wired automatically — `pp-router1` is the controller, and all other machines are peers. Borgbackup runs with the router as server and the NAS as client. SSH keys, authorized keys, and certificate search domains are applied fleet-wide via tags:
 
 ```nix
 sshd-basic = {
@@ -172,7 +172,7 @@ services.caddy.virtualHosts = {
 };
 ```
 
-The tunnel module validates the UUID format at build time, catching both invalid and placeholder values — the same assertion pattern used throughout the router framework in [Part 2](/blog/dotfiles-part-2-nixos-router).
+The tunnel module validates the UUID format at build time, catching both invalid and placeholder values — the same assertion pattern used throughout the router framework in [Part 2](/posts/dotfiles-part-2-nixos-router).
 
 ## Work Environment Isolation
 
@@ -192,4 +192,4 @@ From that point on, updates are just `clan machines update <hostname>`. Secrets 
 
 Nine machines, three operating systems, one flake. The secrets bootstrap cleanly, the user bridge keeps NixOS and Darwin in sync, and clan handles deployment. It's not zero-maintenance, but it's close to the minimum viable complexity for this many machines.
 
-The full setup is in my [dotfiles repo](https://github.com/pperanich/dotfiles). In the [next post](/blog/dotfiles-part-4-network-services), I'll cover the network-aware services that derive their behavior from the topology — split-tunnel VPNs, topology-driven DNS blocking, and dynamic WireGuard peer onboarding.
+The full setup is in my [dotfiles repo](https://github.com/pperanich/dotfiles). In the [next post](/posts/dotfiles-part-4-network-services), I'll cover the network-aware services that derive their behavior from the topology — split-tunnel VPNs, topology-driven DNS blocking, and dynamic WireGuard peer onboarding.

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const tagCounts = new Map<string, number>();
+posts.forEach(post => {
+  post.data.tags.forEach(tag => {
+    tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  });
+});
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="Tags" description="Browse posts by tag">
+  <h1>Tags</h1>
+  <p class="subtitle">{tags.length} tags</p>
+
+  <div class="tag-list">
+    {tags.map(([tag, count]) => (
+      <a href={`/tags/${tag}`} class="tag-item">
+        <span class="tag-name">{tag}</span>
+        <span class="tag-count">{count}</span>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .subtitle {
+    color: rgb(var(--color-muted));
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tag-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(var(--color-card), 0.8);
+    border-radius: 1rem;
+    text-decoration: none;
+    color: rgb(var(--color-text));
+    font-size: 0.85rem;
+    transition: color 0.15s;
+  }
+
+  .tag-item:hover {
+    color: rgb(var(--color-accent));
+  }
+
+  .tag-count {
+    font-size: 0.75rem;
+    color: rgb(var(--color-muted));
+  }
+</style>

@@ -5,7 +5,7 @@ pubDate: 2026-03-15
 tags: ['nix', 'networking', 'security', 'infrastructure']
 ---
 
-In Parts [1](/blog/dotfiles-part-1-dendritic-flakes)–[3](/blog/dotfiles-part-3-secrets-fleet), I covered the module architecture, the router framework, and fleet management. This post is about a different kind of composability: services that derive their behavior from the network topology instead of being configured independently.
+In Parts [1](/posts/dotfiles-part-1-dendritic-flakes)–[3](/posts/dotfiles-part-3-secrets-fleet), I covered the module architecture, the router framework, and fleet management. This post is about a different kind of composability: services that derive their behavior from the network topology instead of being configured independently.
 
 ## ProtonVPN with Network Namespace Split Tunneling
 
@@ -262,6 +262,6 @@ All four of these services share a common design principle: they derive configur
 - DDNS reads DHCP leases to populate DNS — no static host entries
 - WireGuard peers are loaded from data, not hardcoded in Nix expressions
 
-The router's option tree (from [Part 2](/blog/dotfiles-part-2-nixos-router)) makes this possible. Because subnets, isolation levels, and machine definitions are structured data, downstream modules can consume them programmatically. The topology is declared once; everything else follows.
+The router's option tree (from [Part 2](/posts/dotfiles-part-2-nixos-router)) makes this possible. Because subnets, isolation levels, and machine definitions are structured data, downstream modules can consume them programmatically. The topology is declared once; everything else follows.
 
-The full setup is in my [dotfiles repo](https://github.com/pperanich/dotfiles). In the [next post](/blog/dotfiles-part-5-tooling-edges), I'll cover the custom CLI tools and cross-platform patterns that handle the operational edges.
+The full setup is in my [dotfiles repo](https://github.com/pperanich/dotfiles). In the [next post](/posts/dotfiles-part-5-tooling-edges), I'll cover the custom CLI tools and cross-platform patterns that handle the operational edges.

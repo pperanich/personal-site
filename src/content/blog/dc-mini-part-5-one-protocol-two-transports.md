@@ -5,7 +5,7 @@ pubDate: 2026-02-10
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'ble', 'usb', 'rpc']
 ---
 
-In [Part 4](/blog/dc-mini-part-4-event-driven-orchestration) we saw how tasks communicate through a central event bus. But the device also needs to talk to the *host* — a laptop running a recording application, a Python research script, or a configuration tool. DC Mini supports both USB and Bluetooth Low Energy for this, and both use the exact same protocol definition.
+In [Part 4](/posts/dc-mini-part-4-event-driven-orchestration) we saw how tasks communicate through a central event bus. But the device also needs to talk to the *host* — a laptop running a recording application, a Python research script, or a configuration tool. DC Mini supports both USB and Bluetooth Low Energy for this, and both use the exact same protocol definition.
 
 This post covers how we define the protocol once in a shared crate and serve it over two transports without any duplication.
 
@@ -76,7 +76,7 @@ This pays off in practice. During lab work, the Rust tooling can switch seamless
 
 Firmware updates work through the same protocol. The ICD defines a simple state machine: `DfuBegin` with the firmware size, a sequence of `DfuWriteChunk`s with offset and data, and `DfuFinish` to commit. There's also `DfuAbort` for cancellation and `DfuStatus` for progress polling.
 
-The firmware-side DFU handler writes chunks to external QSPI flash regardless of which transport delivered them. On the next reboot, the bootloader (covered in [Part 6](/blog/dc-mini-part-6-executors-dfu-neopixel)) swaps the image. The host doesn't need to know about flash layouts or bootloader mechanics — it just sends chunks and checks status.
+The firmware-side DFU handler writes chunks to external QSPI flash regardless of which transport delivered them. On the next reboot, the bootloader (covered in [Part 6](/posts/dc-mini-part-6-executors-dfu-neopixel)) swaps the image. The host doesn't need to know about flash layouts or bootloader mechanics — it just sends chunks and checks status.
 
 ## Why This Architecture
 
@@ -84,4 +84,4 @@ The separate ICD crate enforces a discipline that's easy to lose in embedded pro
 
 For a research device that's used by firmware engineers, neuroscience researchers writing Python, and clinicians using desktop tools, this consistency is essential. Everyone is talking to the same protocol, just through different doors.
 
-In [Part 6](/blog/dc-mini-part-6-executors-dfu-neopixel), we'll look at the multi-priority executor setup, the bootloader's dual-bank firmware update strategy, and a PWM-based Neopixel driver.
+In [Part 6](/posts/dc-mini-part-6-executors-dfu-neopixel), we'll look at the multi-priority executor setup, the bootloader's dual-bank firmware update strategy, and a PWM-based Neopixel driver.

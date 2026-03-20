@@ -5,7 +5,7 @@ pubDate: 2026-01-27
 tags: ['rust', 'embedded', 'eeg', 'open-source', 'no_std']
 ---
 
-In [Part 2](/blog/dc-mini-part-2-typed-resource-bundles) we saw how DC Mini's BSP bundles pins into typed resource structs. But some peripherals need to be shared. The IMU, ambient light sensor, haptic driver, and power manager all sit on the same I2C bus. Four independent async tasks need concurrent access to one physical peripheral — and in a wearable, we want the ability to power it down when nobody's using it.
+In [Part 2](/posts/dc-mini-part-2-typed-resource-bundles) we saw how DC Mini's BSP bundles pins into typed resource structs. But some peripherals need to be shared. The IMU, ambient light sensor, haptic driver, and power manager all sit on the same I2C bus. Four independent async tasks need concurrent access to one physical peripheral — and in a wearable, we want the ability to power it down when nobody's using it.
 
 This post covers the `bus-manager` crate, which provides lazy initialization, atomic reference counting, and explicit teardown for shared bus peripherals — all in `no_std` without a heap allocator.
 
@@ -77,4 +77,4 @@ The bus manager pattern gives us capabilities that typical embedded bus sharing 
 
 All without a heap allocator, and with the safety guarantees Rust is known for.
 
-In [Part 4](/blog/dc-mini-part-4-event-driven-orchestration), we'll see how the tasks that use these buses communicate through an event-driven orchestration layer.
+In [Part 4](/posts/dc-mini-part-4-event-driven-orchestration), we'll see how the tasks that use these buses communicate through an event-driven orchestration layer.
