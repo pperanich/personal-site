@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import PostCard from '../../components/PostCard.astro';
+import { getSortedPosts } from '../../lib/posts';
 
-const posts = (await getCollection('blog'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = await getSortedPosts();
 ---
 
 <BaseLayout title="Posts" description="All blog posts">
@@ -62,27 +62,10 @@ const posts = (await getCollection('blog'))
 
     <p class="subtitle" x-show="query.length < 2">{posts.length} posts</p>
 
-    <!-- Static server-rendered list (shown when not searching) -->
     <div class="post-list" x-show="query.length < 2">
-      {posts.map((post) => (
-        <a href={`/posts/${post.id}`} class="post-card">
-          <h2 class="post-title">{post.data.title}</h2>
-          <span class="post-meta">
-            <time datetime={post.data.pubDate.toISOString()}>
-              {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-            </time>
-          </span>
-          <p class="post-description">{post.data.description}</p>
-          {post.data.tags.length > 0 && (
-            <div class="tags">
-              {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
-            </div>
-          )}
-        </a>
-      ))}
+      {posts.map((post) => <PostCard post={post} />)}
     </div>
 
-    <!-- Dynamic search results (shown when searching) -->
     <div class="post-list" x-show="query.length >= 2">
       <template x-for="post in results" :key="post.id">
         <a :href="`/posts/${post.id}`" class="post-card">
@@ -104,12 +87,6 @@ const posts = (await getCollection('blog'))
 </BaseLayout>
 
 <style>
-  .subtitle {
-    color: rgb(var(--color-muted));
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-  }
-
   .search-bar {
     display: flex;
     align-items: center;

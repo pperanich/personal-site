@@ -14,7 +14,7 @@ const post = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout title={post.data.title} description={post.data.description} type="article" publishedDate={post.data.pubDate} tags={post.data.tags}>
   <article>
     <header>
       <a href="/posts" class="back-link">&larr; Posts</a>
@@ -39,18 +39,6 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
-  .back-link {
-    font-size: 0.85rem;
-    text-decoration: none;
-    color: rgb(var(--color-muted));
-    display: inline-block;
-    margin-bottom: 1.5rem;
-  }
-
-  .back-link:hover {
-    color: rgb(var(--color-accent));
-  }
-
   header {
     margin-bottom: 2.5rem;
   }

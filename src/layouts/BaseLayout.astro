@@ -2,10 +2,21 @@
 interface Props {
   title: string;
   description?: string;
+  type?: 'website' | 'article';
+  publishedDate?: Date;
+  tags?: string[];
 }
 
-const { title, description = 'Preston Peranich — research engineer, open-source contributor' } = Astro.props;
+const {
+  title,
+  description = 'Preston Peranich — research engineer, open-source contributor',
+  type = 'website',
+  publishedDate,
+  tags,
+} = Astro.props;
 const currentPath = Astro.url.pathname;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = `${title} | Preston Peranich`;
 
 const navItems = [
   { href: '/posts', label: 'Posts' },
@@ -16,17 +27,40 @@ const navItems = [
 ];
 
 import { ClientRouter } from 'astro:transitions';
+import SocialLinks from '../components/SocialLinks.astro';
 ---
 
-<html lang="en" x-data="{ theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), navOpen: false }" x-bind:data-theme="theme" x-bind:class="{ 'theme-ready': true }" x-init="$watch('theme', val => localStorage.setItem('theme', val))">
+<html lang="en" x-data="{ theme: document.documentElement.getAttribute('data-theme') || 'light', navOpen: false }" x-bind:data-theme="theme" x-bind:class="{ 'theme-ready': true }" x-init="$watch('theme', val => localStorage.setItem('theme', val))">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
+    <link rel="alternate" type="application/rss+xml" title="Preston Peranich" href="/rss.xml" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Preston Peranich</title>
+    <title>{fullTitle}</title>
+
+    <!-- OpenGraph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Preston Peranich" />
+    {type === 'article' && publishedDate && <meta property="article:published_time" content={publishedDate.toISOString()} />}
+    {type === 'article' && tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
     <ClientRouter />
     <script is:inline>
       (function() {
@@ -37,12 +71,13 @@ import { ClientRouter } from 'astro:transitions';
     </script>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <header>
       <nav>
         <a href="/" class="site-title">Preston Peranich</a>
         <button class="nav-toggle" x-on:click="navOpen = !navOpen" aria-label="Toggle navigation">
-          <svg x-show="!navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          <svg x-show="navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <svg x-show="!navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <svg x-show="navOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
         <div class="nav-links" x-bind:class="{ open: navOpen }">
           {navItems.map(({ href, label }) => (
@@ -61,39 +96,71 @@ import { ClientRouter } from 'astro:transitions';
             x-on:click="theme = theme === 'light' ? 'dark' : 'light'"
             aria-label="Toggle theme"
           >
-            <svg x-show="theme === 'light'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <svg x-show="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg x-show="theme === 'light'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg x-show="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
           </button>
         </div>
       </nav>
     </header>
-    <main>
+    <main id="main-content">
       <slot />
     </main>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(
+      type === 'article' ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": title,
+        "description": description,
+        "datePublished": publishedDate?.toISOString(),
+        "url": canonicalURL.toString(),
+        "author": {
+          "@type": "Person",
+          "name": "Preston Peranich",
+        },
+        ...(tags?.length ? { "keywords": tags.join(", ") } : {}),
+      } : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Preston Peranich",
+        "url": Astro.site?.toString(),
+        "author": {
+          "@type": "Person",
+          "name": "Preston Peranich",
+          "url": Astro.site?.toString(),
+          "jobTitle": "Research Engineer",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Johns Hopkins Applied Physics Laboratory"
+          }
+        }
+      }
+    )} />
     <footer>
       <div class="footer-content">
         <p>&copy; {new Date().getFullYear()} Preston Peranich</p>
-        <div class="social-links">
-          <a href="https://github.com/pperanich" target="_blank" rel="noopener" aria-label="GitHub">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-          </a>
-          <a href="https://linkedin.com/in/preston-peranich-74166812a" target="_blank" rel="noopener" aria-label="LinkedIn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-          <a href="https://scholar.google.com/citations?user=WDM22cwAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
-          </a>
-          <a href="mailto:pperanich@gmail.com" aria-label="Email">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          </a>
-        </div>
+        <SocialLinks />
       </div>
     </footer>
   </body>
 </html>
 
 <style is:global>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgb(var(--color-accent));
+    color: #fff;
+    border-radius: 0 0 0.25rem 0.25rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    z-index: 200;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
 
   :root {
     --font-body: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', monospace;
@@ -410,6 +477,25 @@ import { ClientRouter } from 'astro:transitions';
     flex-wrap: wrap;
     gap: 0.4rem;
     margin-top: 0.5rem;
+  }
+
+  /* Shared page elements */
+  .back-link {
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: rgb(var(--color-muted));
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link:hover {
+    color: rgb(var(--color-accent));
+  }
+
+  .subtitle {
+    color: rgb(var(--color-muted));
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
   }
 
   /* Mobile */

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prestonperanich.com/sitemap-index.xml
