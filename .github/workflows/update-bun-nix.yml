@@ -1,0 +1,33 @@
+name: Update bun.nix
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - bun.lock
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: Regenerate bun.nix
+        run: nix run github:nix-community/bun2nix -- -l bun.lock -o bun.nix
+
+      - name: Push if changed
+        run: |
+          if ! git diff --quiet bun.nix; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add bun.nix
+            git commit -m "chore: regenerate bun.nix"
+            git push
+          fi
