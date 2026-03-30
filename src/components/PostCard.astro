@@ -19,7 +19,7 @@ const { title, pubDate, description, tags } = post.data;
   <p class="post-description">{description}</p>
   {tags.length > 0 && (
     <div class="tags">
-      {tags.map((tag) => <a href={`/tags/${tag}`} class="tag">{tag}</a>)}
+      {tags.map((tag) => <span class="tag">{tag}</span>)}
     </div>
   )}
 </a>

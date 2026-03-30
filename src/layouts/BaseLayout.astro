@@ -5,6 +5,7 @@ interface Props {
   type?: 'website' | 'article';
   publishedDate?: Date;
   tags?: string[];
+  image?: string;
 }
 
 const {
@@ -13,7 +14,9 @@ const {
   type = 'website',
   publishedDate,
   tags,
+  image,
 } = Astro.props;
+const ogImage = new URL(image || defaultOgImage.src, Astro.site).toString();
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = `${title} | Preston Peranich`;
@@ -23,14 +26,16 @@ const navItems = [
   { href: '/tags', label: 'Tags' },
   { href: '/apps', label: 'Apps' },
   { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
   { href: '/resume.pdf', label: 'Resume' },
 ];
 
 import { ClientRouter } from 'astro:transitions';
 import SocialLinks from '../components/SocialLinks.astro';
+import defaultOgImage from '../assets/headshot.jpg';
 ---
 
-<html lang="en" x-data="{ theme: document.documentElement.getAttribute('data-theme') || 'light', navOpen: false }" x-bind:data-theme="theme" x-bind:class="{ 'theme-ready': true }" x-init="$watch('theme', val => localStorage.setItem('theme', val))">
+<html lang="en" x-data="{ theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), navOpen: false }" x-bind:data-theme="theme" x-bind:class="{ 'theme-ready': true }" x-init="$watch('theme', val => localStorage.setItem('theme', val))">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -48,13 +53,15 @@ import SocialLinks from '../components/SocialLinks.astro';
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Preston Peranich" />
+    <meta property="og:image" content={ogImage} />
     {type === 'article' && publishedDate && <meta property="article:published_time" content={publishedDate.toISOString()} />}
     {type === 'article' && tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -470,6 +477,15 @@ import SocialLinks from '../components/SocialLinks.astro';
   .tag:hover {
     color: rgb(var(--color-accent));
     background: rgba(var(--color-accent), 0.1);
+  }
+
+  .post-card .tag {
+    pointer-events: none;
+  }
+
+  .post-card .tag:hover {
+    color: rgb(var(--color-muted));
+    background: rgba(var(--color-card), 0.8);
   }
 
   .tags {

@@ -1,18 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import headshot from '../assets/headshot.jpg';
 ---
 
 <BaseLayout title="About" description="About Preston Peranich — research engineer, open-source contributor, and endurance athlete">
   <h1>About Me</h1>
 
   <section>
-    <p>
-      I'm Preston, a research engineer at
-      <a href="https://www.jhuapl.edu">Johns Hopkins Applied Physics Laboratory</a>
-      where I build real-time sensing and control systems. My work spans the full
-      stack — embedded firmware and edge deployments, GPU-accelerated processing,
-      and the researcher-facing tools that tie it all together.
-    </p>
+    <div class="intro">
+      <Image
+        src={headshot}
+        alt="Preston Peranich"
+        class="headshot"
+        width={160}
+        quality={85}
+      />
+      <p>
+        I'm Preston, a research engineer at
+        <a href="https://www.jhuapl.edu">Johns Hopkins Applied Physics Laboratory</a>
+        where I build real-time sensing and control systems. My work spans the full
+        stack — embedded firmware and edge deployments, GPU-accelerated processing,
+        and the researcher-facing tools that tie it all together.
+      </p>
+    </div>
     <p>
       Most of my time is spent in the Neural Interfaces group, where I work on
       noninvasive and intracortical brain-computer interfaces, closed-loop organoid
@@ -77,6 +88,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
+  .intro {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .intro p {
+    margin-bottom: 0;
+  }
+
+  .headshot {
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+  }
+
   section {
     margin-bottom: 2.5rem;
   }
@@ -89,5 +116,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     text-decoration: underline;
     text-decoration-style: dashed;
     text-underline-offset: 0.2rem;
+  }
+
+  @media (max-width: 640px) {
+    .intro {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 </style>

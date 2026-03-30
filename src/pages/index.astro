@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import SocialLinks from '../components/SocialLinks.astro';
+import { Image } from 'astro:assets';
+import headshot from '../assets/headshot.jpg';
 import { getSortedPosts } from '../lib/posts';
 
 const posts = (await getSortedPosts()).slice(0, 5);
@@ -9,15 +11,23 @@ const posts = (await getSortedPosts()).slice(0, 5);
 
 <BaseLayout title="Home">
   <section class="hero">
-    <h1>Hey, I'm Preston</h1>
-    <p>
-      Research engineer at <a href="https://www.jhuapl.edu">Johns Hopkins APL</a>
-      working on neural interfaces, real-time sensing systems, and open-source embedded
-      firmware. I write about Rust, Nix, and the infrastructure that holds it all together.
-    </p>
-    <div class="social-wrapper">
-      <span class="social-label">Social Links:</span>
-      <SocialLinks size={20} />
+    <div class="hero-intro">
+      <div class="hero-text">
+        <h1>Hey, I'm Preston</h1>
+        <p>
+          Research engineer at <a href="https://www.jhuapl.edu">Johns Hopkins APL</a>
+          working on neural interfaces, real-time sensing systems, and open-source embedded
+          firmware. I write about Rust, Nix, and the infrastructure that holds it all together.
+        </p>
+        <SocialLinks size={20} />
+      </div>
+      <Image
+        src={headshot}
+        alt="Preston Peranich"
+        class="hero-headshot"
+        width={140}
+        quality={85}
+      />
     </div>
   </section>
 
@@ -35,6 +45,17 @@ const posts = (await getSortedPosts()).slice(0, 5);
     margin-bottom: 3rem;
   }
 
+  .hero-intro {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .hero-headshot {
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
   .hero h1 {
     margin-bottom: 0.75rem;
   }
@@ -44,23 +65,21 @@ const posts = (await getSortedPosts()).slice(0, 5);
     max-width: 36rem;
   }
 
-  .hero > p a {
+  .hero-text p a {
     text-decoration: underline;
     text-decoration-style: dashed;
     text-underline-offset: 0.2rem;
   }
 
-  .social-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
+  @media (max-width: 640px) {
+    .hero-intro {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
   }
 
-  .social-label {
-    font-size: 0.85rem;
-    color: rgb(var(--color-muted));
-  }
 
   section h2 {
     margin-bottom: 0.5rem;

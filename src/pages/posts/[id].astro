@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -12,9 +13,10 @@ export async function getStaticPaths() {
 
 const post = Astro.props;
 const { Content } = await render(post);
+const ogImageSrc = post.data.image?.src;
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} type="article" publishedDate={post.data.pubDate} tags={post.data.tags}>
+<BaseLayout title={post.data.title} description={post.data.description} type="article" publishedDate={post.data.pubDate} tags={post.data.tags} image={ogImageSrc}>
   <article>
     <header>
       <a href="/posts" class="back-link">&larr; Posts</a>
@@ -32,6 +34,15 @@ const { Content } = await render(post);
         </div>
       )}
     </header>
+    {post.data.image && (
+      <Image
+        src={post.data.image}
+        alt={post.data.imageAlt || post.data.title}
+        class="hero-image"
+        widths={[480, 768, 1024]}
+        sizes="(max-width: 768px) 100vw, 768px"
+      />
+    )}
     <div class="content">
       <Content />
     </div>
@@ -50,6 +61,13 @@ const { Content } = await render(post);
   .meta {
     font-size: 0.85rem;
     color: rgb(var(--color-muted));
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
   }
 
   .content {
