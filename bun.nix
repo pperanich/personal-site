@@ -537,9 +537,9 @@
     url = "https://registry.npmjs.org/array-iterate/-/array-iterate-2.0.1.tgz";
     hash = "sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==";
   };
-  "astro@6.1.1" = fetchurl {
-    url = "https://registry.npmjs.org/astro/-/astro-6.1.1.tgz";
-    hash = "sha512-vq8sHpu1JsY1fWAunn+tdKNbVDmLQNiVdyuGsVT2csgITdFGXXVAyEXFWc1DzkMN0ehElPeiHnqItyQOJK+GqA==";
+  "astro@6.1.2" = fetchurl {
+    url = "https://registry.npmjs.org/astro/-/astro-6.1.2.tgz";
+    hash = "sha512-r3iIvmB6JvQxsdJLvapybKKq7Bojd1iQK6CCx5P55eRnXJIyUpHx/1UB/GdMm+em/lwaCUasxHCmIO0lCLV2uA==";
   };
   "axobject-query@4.1.0" = fetchurl {
     url = "https://registry.npmjs.org/axobject-query/-/axobject-query-4.1.0.tgz";
