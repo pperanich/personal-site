@@ -1,4 +1,5 @@
 {
+  lib,
   stdenv,
   bun2nix,
   autoPatchelfHook,
@@ -48,6 +49,17 @@ stdenv.mkDerivation {
   '';
 
   buildPhase = ''
+    # autoPatchelf resolves libstdc++ but leaves libvips-cpp unresolved on the
+    # sharp binding (empty rpath), so sharp fails to load during astro's
+    # prerender. node_modules never reach $out (only ./dist is installed), so
+    # LD_LIBRARY_PATH for the build process is sufficient and robust across
+    # bun/bun2nix/autoPatchelf versions. Glob covers glibc libvips dirs for
+    # any arch (linux-x64, linux-arm64, ...) but must NOT match linuxmusl-*:
+    # the musl libvips would shadow the glibc one and fail to load.
+    for vipsdir in node_modules/@img/sharp-libvips-linux-*/lib; do
+      export LD_LIBRARY_PATH="$PWD/$vipsdir''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    done
+    export LD_LIBRARY_PATH="''${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}${lib.makeLibraryPath [ stdenv.cc.cc.lib ]}"
     bun run build --minify
   '';
 
