@@ -25,7 +25,7 @@ Two other projects kept tmux, and each demonstrated half of what I needed. `tmux
 
 Every verdict `tma` reaches gets written back onto tmux as pane and window user options:
 
-```
+```bash
 set -p -t %13 @agent_name  claude
 set -p -t %13 @agent_state blocked
 set -w -t mysession:2 @agent_summary "blocked:1"
@@ -33,7 +33,7 @@ set -w -t mysession:2 @agent_summary "blocked:1"
 
 Once state lives there, integrating with it is ordinary tmux configuration rather than a private protocol:
 
-```tmux
+```bash
 set -g status-right '#(tma status) %H:%M'
 set -g window-status-format '#{?#{m:*blocked*,#{@agent_summary}},#[fg=red],}#I:#W'
 ```
@@ -148,7 +148,7 @@ It's also not an orchestrator. It observes agents and answers prompts you aim at
 
 You need tmux 3.6 or newer, which is what it's developed and tested against, and `tma doctor` warns on anything older.
 
-```
+```sh
 curl -fsSL https://raw.githubusercontent.com/pperanich/tmux-agents/main/scripts/install.sh | sh
 tma init
 ```
